@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="Budgets.GUI.WPF.Authentication.AuthView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Budgets.GUI.WPF.Authentication"
+             mc:Ignorable="d">
+    
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type local:SignInViewModel}">
+            <local:SignInView></local:SignInView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:SignUpViewModel}">
+            <local:SignUpView></local:SignUpView>
+        </DataTemplate>
+    </UserControl.Resources>
+    <ContentControl Content="{Binding CurrentViewModel}"></ContentControl>
+</UserControl>
