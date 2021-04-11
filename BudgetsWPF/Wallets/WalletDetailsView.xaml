@@ -4,23 +4,57 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Budgets.GUI.WPF.Wallets"
-             mc:Ignorable="d">
+             mc:Ignorable="d"
+             IsEnabled="{Binding IsEnabled}">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0">
             <TextBlock Margin="10 10 10 0">Name</TextBlock>
-            <TextBox Margin="10" HorizontalAlignment="Stretch" 
-                     Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBox Margin="10" HorizontalAlignment="Stretch">
+                <TextBox.Text>
+                    <Binding Path="Name" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <DataErrorValidationRule></DataErrorValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
         </StackPanel>
         <StackPanel Grid.Row="1">
-            <TextBlock Margin="10 10 10 0">Balance</TextBlock>
+            <TextBlock Margin="10 10 10 0">Description</TextBlock>
             <TextBox Margin="10" HorizontalAlignment="Stretch" 
-                     Text="{Binding Balance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                     TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MaxLines="5"
+                     Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         </StackPanel>
+        <StackPanel Grid.Row="2">
+            <TextBlock Margin="10 10 10 0">Currency</TextBlock>
+            <TextBox Margin="10" HorizontalAlignment="Stretch">
+                <TextBox.Text>
+                    <Binding Path="Currency" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <DataErrorValidationRule></DataErrorValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+        </StackPanel>
+        <StackPanel Grid.Row="3">
+            <TextBlock Margin="10 10 10 0">Initial Balance</TextBlock>
+            <TextBox Margin="10" HorizontalAlignment="Stretch" 
+                     Text="{Binding InitialBalance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        </StackPanel>
+        <Button Grid.Row="4" Margin="10"
+                Command="{Binding SaveWalletCommand}">Save</Button>
+        <ProgressBar Name="ProgressBar" Grid.Row="5" Grid.Column="0"
+                      IsIndeterminate="{Binding IsIndeterminate}" Visibility="{Binding Visibility}" Foreground="#242670"/>
     </Grid>
 </UserControl>

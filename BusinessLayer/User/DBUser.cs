@@ -12,9 +12,9 @@ namespace Budgets.BusinessLayer.User
         public string LastName { get; }
         public string Email { get; }
 
-        public DBUser(string login, string password, string firstName, string lastName, string email)
+        public DBUser(Guid guid, string login, string password, string firstName, string lastName, string email)
         {
-            Guid = Guid.NewGuid();
+            Guid = guid;
             Login = login;
             Password = password;
             FirstName = firstName;

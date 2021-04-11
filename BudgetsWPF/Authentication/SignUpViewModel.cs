@@ -169,12 +169,12 @@ namespace Budgets.GUI.WPF.Authentication
             {
                 await authService.Register(_regUser);
 
-                MessageBox.Show("User successfully registered. Please Sign In");
+                MessageBox.Show("User successfully registered. Please Sign In", "Sign Up");
                 GoToSignInCommand.Execute();
             }
             catch (Exception e)
             {
-                MessageBox.Show("Sign Up failed: " + e.Message);
+                MessageBox.Show("Sign Up failed: " + e.Message, "Sign Up");
             }
             finally
             {
@@ -190,7 +190,7 @@ namespace Budgets.GUI.WPF.Authentication
                    && !string.IsNullOrWhiteSpace(Password)
                    && !string.IsNullOrWhiteSpace(FirstName)
                    && !string.IsNullOrWhiteSpace(LastName)
-                   && !string.IsNullOrWhiteSpace(Email);
+                   && this[nameof(Email)] == string.Empty;
         }
 
 
@@ -213,9 +213,9 @@ namespace Budgets.GUI.WPF.Authentication
                 switch (columnName)
                 {
                     case "Login":
-                        if (Login.Length < 4 || Login.Length > 32)
+                        if (string.IsNullOrWhiteSpace(Login))
                         {
-                            error = "Login can be more than 3 symbols and less than 33 symbols";
+                            error = "Login cannot be empty";
                         }
                         break;
                     case "FirstName":

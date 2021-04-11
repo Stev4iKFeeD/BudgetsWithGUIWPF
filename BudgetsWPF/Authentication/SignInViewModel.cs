@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using Budgets.BusinessLayer.User;
 using Budgets.GUI.WPF.Navigation;
@@ -127,13 +128,14 @@ namespace Budgets.GUI.WPF.Authentication
             try
             {
                 User user = await authService.Authenticate(_authUser);
+                CurrentUserInfo.Guid = user.Guid;
 
-                MessageBox.Show($"Sign In is successful for user {user.FirstName} {user.LastName}");
-                GoToWalletsCommand.Execute();
+                MessageBox.Show($"Sign In is successful for user {user.FirstName} {user.LastName}", "Sign In");
+                await Task.Run(() => GoToWalletsCommand.Execute());
             }
             catch (Exception e)
             {
-                MessageBox.Show("Sign In failed: " + e.Message);
+                MessageBox.Show("Sign In failed: " + e.Message, "Sign In");
             }
             finally
             {

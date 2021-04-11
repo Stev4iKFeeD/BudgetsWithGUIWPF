@@ -21,8 +21,10 @@ namespace Budgets.BusinessLayer.Wallets
         public List<Transaction> Transactions { get; }
         public List<Category> Categories { get; }
 
+        public Guid OwnerGuid { get; }
 
-        public Wallet(Guid guid, string name, string description, string currency, decimal initialBalance)
+
+        public Wallet(Guid guid, string name, string description, string currency, decimal initialBalance, Guid ownerGuid)
         {
             Guid = guid;
             Name = name;
@@ -32,6 +34,8 @@ namespace Budgets.BusinessLayer.Wallets
 
             Transactions = new List<Transaction>();
             Categories = new List<Category>();
+
+            OwnerGuid = ownerGuid;
         }
 
 

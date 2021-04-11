@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Budgets.BusinessLayer.User;
 using DataStorage;
@@ -17,7 +16,7 @@ namespace Budgets.Services
         {
             return await Task.Run(async () =>
             {
-                Thread.Sleep(1000);
+                // Thread.Sleep(1000);
 
                 if (string.IsNullOrWhiteSpace(authUser.Login) || string.IsNullOrWhiteSpace(authUser.Password))
                 {
@@ -44,7 +43,7 @@ namespace Budgets.Services
         {
             await Task.Run(async () =>
             {
-                Thread.Sleep(1000);
+                // Thread.Sleep(1000);
 
                 if (string.IsNullOrWhiteSpace(regUser.Login)
                     || string.IsNullOrWhiteSpace(regUser.Password)
@@ -73,6 +72,7 @@ namespace Budgets.Services
 
                 await _storage.AddOrUpdateAsync(new DBUser
                 (
+                    Guid.NewGuid(),
                     regUser.Login,
                     hashPassword,
                     regUser.FirstName,

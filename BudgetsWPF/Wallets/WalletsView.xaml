@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Budgets.GUI.WPF.Wallets"
-             mc:Ignorable="d">
+             mc:Ignorable="d"
+             IsEnabled="{Binding IsEnabled}">
 
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type local:WalletDetailsViewModel}">
@@ -12,15 +13,34 @@
         </DataTemplate>
     </UserControl.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="150"></ColumnDefinition>
             <ColumnDefinition Width="2"></ColumnDefinition>
             <ColumnDefinition Width="3*" MinWidth="150"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <ListView Grid.RowSpan="2" 
-                  ItemsSource="{Binding Wallets}" DisplayMemberPath="DisplayName" SelectedItem="{Binding CurrentWallet}"></ListView>
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"></GridSplitter>
-        <ContentControl Grid.Column="2" Content="{Binding CurrentWallet}"></ContentControl>
+        <ListView SelectionMode="Single" ItemsSource="{Binding Wallets}" 
+                  DisplayMemberPath="DisplayName" SelectedItem="{Binding CurrentWallet}"></ListView>
+        <Button Grid.Row="1" Grid.Column="0" Margin="10"
+                Command="{Binding AddWalletCommand}">Add</Button>
+        <Button Grid.Row="2" Grid.Column="0" Margin="10 0 10 10"
+                Command="{Binding RemoveWalletCommand}">Remove</Button>
+        <GridSplitter Grid.Row="0" Grid.Column="1" Grid.RowSpan="5" HorizontalAlignment="Stretch"></GridSplitter>
+        <ScrollViewer Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" VerticalScrollBarVisibility="Auto">
+            <ContentControl Content="{Binding CurrentWallet}"></ContentControl>
+        </ScrollViewer>
+
+        <Button Grid.Row="3" Grid.Column="0" Margin="10"
+                Command="{Binding SignOutCommand}">Sign Out</Button>
+
+        <ProgressBar Name="ProgressBar" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" 
+                     IsIndeterminate="{Binding IsIndeterminate}" Visibility="{Binding Visibility}" Foreground="#242670"/>
     </Grid>
 </UserControl>

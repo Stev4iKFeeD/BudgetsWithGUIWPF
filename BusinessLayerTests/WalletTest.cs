@@ -18,7 +18,7 @@ namespace Budgets.BusinessLayerTests
 
             decimal initialBalance = 50.00M;
 
-            Wallet wallet1 = new Wallet() { Name = "Wall_let", Currency = "UAH", InitialBalance = initialBalance };
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", initialBalance, Guid.NewGuid());
 
             Transaction transaction1 = new Transaction(1) { Sum = 10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
             Transaction transaction2 = new Transaction(2) { Sum = -5.19M, Currency = "UAH", Category = category2, Date = DateTime.Today };
@@ -44,7 +44,7 @@ namespace Budgets.BusinessLayerTests
             Category category1 = new Category(1) { Name = "Salary", Color = Color.Blue };
             Category category2 = new Category(2) { Name = "Health", Color = Color.Green };
 
-            Wallet wallet1 = new Wallet() { Name = "Wall_let", Currency = "UAH" };
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
             Transaction transaction1 = new Transaction(1) { Sum = 10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
             Transaction transaction2 = new Transaction(2) { Sum = -5.19M, Currency = "UAH", Category = category2, Date = DateTime.Today };
@@ -69,7 +69,7 @@ namespace Budgets.BusinessLayerTests
             // Arrange
             Category category1 = new Category(1) { Name = "Salary", Color = Color.Blue };
 
-            Wallet wallet1 = new Wallet() { Name = "Wall_let", Currency = "UAH" };
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
             Transaction transaction1 = new Transaction(1) { Sum = 10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
             Transaction transaction2 = new Transaction(2) { Sum = 132.32M, Currency = "UAH", Category = category1, Date = DateTime.Today };
@@ -101,7 +101,7 @@ namespace Budgets.BusinessLayerTests
             Category category1 = new Category(1) { Name = "Salary", Color = Color.Blue };
             Category category2 = new Category(2) { Name = "Health", Color = Color.Green };
 
-            Wallet wallet1 = new Wallet() { Name = "Wall_let", Currency = "UAH" };
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
             Transaction transaction1 = new Transaction(1) { Sum = 10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
             Transaction transaction2 = new Transaction(2) { Sum = -5.19M, Currency = "UAH", Category = category2, Date = DateTime.Today };
@@ -126,7 +126,7 @@ namespace Budgets.BusinessLayerTests
             // Arrange
             Category category1 = new Category(1) { Name = "Health", Color = Color.Green };
 
-            Wallet wallet1 = new Wallet() { Name = "Wall_let", Currency = "UAH" };
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
             Transaction transaction1 = new Transaction(1) { Sum = -10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
             Transaction transaction2 = new Transaction(2) { Sum = -132.32M, Currency = "UAH", Category = category1, Date = DateTime.Today };
@@ -158,9 +158,9 @@ namespace Budgets.BusinessLayerTests
             Category categoryHealth = new Category(1) { Name = "Health", Color = Color.Green };
             Category categoryEat = new Category(2) { Name = "Eat", Color = Color.Red };
 
-            Wallet walletNoCategories = new Wallet() { Name = "Without categories", Currency = "UAH" };
+            Wallet walletNoCategories = new Wallet(Guid.NewGuid(), "Without categories", "desc", "UAH", 0, Guid.NewGuid());
 
-            Wallet walletHealthCategory = new Wallet() { Name = "With category (Health)", Currency = "USD" };
+            Wallet walletHealthCategory = new Wallet(Guid.NewGuid(), "With category (Health)", "desc", "USD", 0, Guid.NewGuid());
             walletHealthCategory.AddCategory(categoryHealth);
 
             Transaction transactionEat = new Transaction(1) { Sum = -10.10M, Currency = "UAH", Category = categoryEat, Date = DateTime.Today};
@@ -187,7 +187,7 @@ namespace Budgets.BusinessLayerTests
             // Arrange
             Category category1 = new Category(1) { Name = "Salary", Color = Color.Blue };
 
-            Wallet wallet1 = new Wallet() { Name = "Wall_let", Currency = "UAH" };
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
             Transaction transaction1 = new Transaction(1) { Sum = 10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
             Transaction transaction2 = new Transaction(2) { Sum = 5.19M, Currency = "UAH", Category = category1, Date = DateTime.Today };
@@ -209,7 +209,7 @@ namespace Budgets.BusinessLayerTests
             // Arrange
             Category category1 = new Category(1) { Name = "Salary", Color = Color.Blue };
 
-            Wallet wallet1 = new Wallet() { Name = "Wall_let", Currency = "UAH" };
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
             Transaction transaction1 = new Transaction(1) { Sum = 10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
 
@@ -230,7 +230,7 @@ namespace Budgets.BusinessLayerTests
             // Arrange
             Category category1 = new Category(1) { Name = "Salary", Color = Color.Blue };
 
-            Wallet wallet1 = new Wallet() { Name = "Wall_let", Currency = "UAH" };
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
             Transaction transaction1 = new Transaction(1) { Sum = 10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
 
@@ -251,7 +251,7 @@ namespace Budgets.BusinessLayerTests
             // Arrange
             Category category1 = new Category(1) { Name = "Salary", Color = Color.Blue };
 
-            Wallet wallet1 = new Wallet() { Name = "Wall_let", Currency = "UAH" };
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
             List<Transaction> transactions = new List<Transaction>();
             for (int i = 1; i <= 12; i++)
@@ -279,7 +279,7 @@ namespace Budgets.BusinessLayerTests
             // Arrange
             Category category1 = new Category(1) { Name = "Salary", Color = Color.Blue };
 
-            Wallet wallet1 = new Wallet() { Name = "Wall_let", Currency = "UAH" };
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
             List<Transaction> transactions = new List<Transaction>();
             for (int i = 1; i <= 12; i++)
@@ -305,7 +305,7 @@ namespace Budgets.BusinessLayerTests
             // Arrange
             Category category1 = new Category(1) { Name = "Health", Color = Color.Green };
 
-            Wallet wallet1 = new Wallet() { Name = "Wall_let", Currency = "UAH" };
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
             // Act
             bool actualAddFirstTime = wallet1.AddCategory(category1);
@@ -323,8 +323,8 @@ namespace Budgets.BusinessLayerTests
             Category category1 = new Category(1) { Name = "Health", Color = Color.Green };
             Category category2 = new Category(2) { Name = "Eat", Color = Color.Red };
 
-            Wallet wallet1 = new Wallet() { Name = "Wall_let", Currency = "UAH" };
-        
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
+
             wallet1.AddCategory(category1);
         
             // Act
@@ -342,8 +342,8 @@ namespace Budgets.BusinessLayerTests
             // Arrange
             Category category1 = new Category(1) { Name = "Salary", Color = Color.Blue };
         
-            Wallet wallet1 = new Wallet() { Name = "Wall_let", Currency = "UAH" };
-        
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
+
             wallet1.AddCategory(category1);
         
             // Act
@@ -361,8 +361,8 @@ namespace Budgets.BusinessLayerTests
             // Arrange
             Category category1 = new Category(1) { Name = "Salary", Color = Color.Blue };
         
-            Wallet wallet1 = new Wallet() { Name = "Wall_let", Currency = "UAH" };
-        
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
+
             wallet1.AddCategory(category1);
         
             // Act
@@ -378,7 +378,7 @@ namespace Budgets.BusinessLayerTests
         public void GetCategoriesTest()
         {
             // Arrange
-            Wallet wallet1 = new Wallet() { Name = "Wall_let", Currency = "UAH" };
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
             List<Category> categories = new List<Category>();
             for (int i = 0; i < 10; i++)
@@ -402,7 +402,7 @@ namespace Budgets.BusinessLayerTests
         public void ValidateValid()
         {
             // Arrange
-            Wallet wallet1 = new Wallet() { Name = "Wall_let", Currency = "UAH" };
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
             // Act
             bool actual = wallet1.Validate();
@@ -415,7 +415,7 @@ namespace Budgets.BusinessLayerTests
         public void ValidateOnlyName()
         {
             // Arrange
-            Wallet wallet1 = new Wallet() { Name = "Wall_let" };
+            Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "", 0, Guid.NewGuid());
 
             // Act
             bool actual = wallet1.Validate();

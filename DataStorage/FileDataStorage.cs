@@ -8,7 +8,7 @@ namespace DataStorage
 {
     public class FileDataStorage<TObject> where TObject : class, IStorable
     {
-        private static string _baseFolder;
+        private readonly string _baseFolder;
 
         public FileDataStorage(string subDirectory = null)
         {
@@ -75,6 +75,19 @@ namespace DataStorage
             }
 
             return res;
+        }
+
+        public async Task<bool> Delete(Guid guid)
+        {
+            string filePath = Path.Combine(_baseFolder, guid.ToString("N"));
+
+            if (!File.Exists(filePath))
+            {
+                return false;
+            }
+
+            File.Delete(filePath);
+            return true;
         }
     }
 }
