@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using Budgets.BusinessLayer;
+using Budgets.BusinessLayer.Transactions;
 using Budgets.BusinessLayer.Wallets;
 using Xunit;
 
@@ -20,9 +21,9 @@ namespace Budgets.BusinessLayerTests
 
             Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", initialBalance, Guid.NewGuid());
 
-            Transaction transaction1 = new Transaction(1) { Sum = 10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
-            Transaction transaction2 = new Transaction(2) { Sum = -5.19M, Currency = "UAH", Category = category2, Date = DateTime.Today };
-            Transaction transaction3 = new Transaction(3) { Sum = 32.32M, Currency = "UAH", Category = category1, Date = DateTime.Today };
+            Transaction transaction1 = new Transaction(Guid.NewGuid(), 10.10M, "UAH", category1, "", DateTimeOffset.Now);
+            Transaction transaction2 = new Transaction(Guid.NewGuid(), -5.19M, "UAH", category2, "", DateTimeOffset.Now);
+            Transaction transaction3 = new Transaction(Guid.NewGuid(), 32.32M, "UAH", category1, "", DateTimeOffset.Now);
 
             wallet1.AddTransaction(transaction1);
             wallet1.AddTransaction(transaction2);
@@ -41,14 +42,17 @@ namespace Budgets.BusinessLayerTests
         public void IncomesTest()
         {
             // Arrange
+            DateTimeOffset now = DateTimeOffset.Now;
+            DateTimeOffset today = new DateTimeOffset(now.Year, now.Month, now.Day, 0, 0, 0, now.Offset);
+
             Category category1 = new Category(1) { Name = "Salary", Color = Color.Blue };
             Category category2 = new Category(2) { Name = "Health", Color = Color.Green };
 
             Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
-            Transaction transaction1 = new Transaction(1) { Sum = 10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
-            Transaction transaction2 = new Transaction(2) { Sum = -5.19M, Currency = "UAH", Category = category2, Date = DateTime.Today };
-            Transaction transaction3 = new Transaction(3) { Sum = 32.32M, Currency = "UAH", Category = category1, Date = DateTime.Today };
+            Transaction transaction1 = new Transaction(Guid.NewGuid(), 10.10M, "UAH", category1, "", now);
+            Transaction transaction2 = new Transaction(Guid.NewGuid(), -5.19M, "UAH", category2, "", now);
+            Transaction transaction3 = new Transaction(Guid.NewGuid(), 32.32M, "UAH", category1, "", now);
 
             wallet1.AddTransaction(transaction1);
             wallet1.AddTransaction(transaction2);
@@ -57,7 +61,7 @@ namespace Budgets.BusinessLayerTests
             decimal expected = transaction1.Sum + transaction3.Sum;
 
             // Act
-            decimal actual = wallet1.Incomes(DateTime.Today, DateTime.Today);
+            decimal actual = wallet1.Incomes(today, now);
 
             // Assert
             Assert.Equal(expected, actual);
@@ -71,15 +75,12 @@ namespace Budgets.BusinessLayerTests
 
             Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
-            Transaction transaction1 = new Transaction(1) { Sum = 10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
-            Transaction transaction2 = new Transaction(2) { Sum = 132.32M, Currency = "UAH", Category = category1, Date = DateTime.Today };
-            Transaction transaction3 = new Transaction(3)
-            {
-                Sum = 43.76M,
-                Currency = "UAH",
-                Category = category1,
-                Date = new DateTime(DateTime.Today.Year, DateTime.Today.Month - 1, DateTime.Today.Day)
-            };
+            Transaction transaction1 = new Transaction(Guid.NewGuid(), 10.10M, "UAH", category1, "", DateTimeOffset.Now);
+            Transaction transaction2 = new Transaction(Guid.NewGuid(), 132.32M, "UAH", category1, "", DateTimeOffset.Now);
+            Transaction transaction3 = new Transaction(Guid.NewGuid(), 43.76M, "UAH", category1, "",
+                new DateTimeOffset(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month - 1, DateTimeOffset.Now.Day,
+                    DateTimeOffset.Now.Hour, DateTimeOffset.Now.Minute, DateTimeOffset.Now.Second,
+                    DateTimeOffset.Now.Offset));
 
             wallet1.AddTransaction(transaction1);
             wallet1.AddTransaction(transaction2);
@@ -98,14 +99,17 @@ namespace Budgets.BusinessLayerTests
         public void ExpensesTest()
         {
             // Arrange
+            DateTimeOffset now = DateTimeOffset.Now;
+            DateTimeOffset today = new DateTimeOffset(now.Year, now.Month, now.Day, 0, 0, 0, now.Offset);
+
             Category category1 = new Category(1) { Name = "Salary", Color = Color.Blue };
             Category category2 = new Category(2) { Name = "Health", Color = Color.Green };
 
             Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
-            Transaction transaction1 = new Transaction(1) { Sum = 10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
-            Transaction transaction2 = new Transaction(2) { Sum = -5.19M, Currency = "UAH", Category = category2, Date = DateTime.Today };
-            Transaction transaction3 = new Transaction(3) { Sum = -32.32M, Currency = "UAH", Category = category2, Date = DateTime.Today };
+            Transaction transaction1 = new Transaction(Guid.NewGuid(), 10.10M, "UAH", category1, "", now);
+            Transaction transaction2 = new Transaction(Guid.NewGuid(), -5.19M, "UAH", category2, "", now);
+            Transaction transaction3 = new Transaction(Guid.NewGuid(), -32.32M, "UAH", category2, "", now);
 
             wallet1.AddTransaction(transaction1);
             wallet1.AddTransaction(transaction2);
@@ -114,7 +118,7 @@ namespace Budgets.BusinessLayerTests
             decimal expected = Math.Abs(transaction2.Sum + transaction3.Sum);
 
             // Act
-            decimal actual = wallet1.Expenses(DateTime.Today, DateTime.Today);
+            decimal actual = wallet1.Expenses(today, now);
 
             // Assert
             Assert.Equal(expected, actual);
@@ -128,16 +132,13 @@ namespace Budgets.BusinessLayerTests
 
             Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
-            Transaction transaction1 = new Transaction(1) { Sum = -10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
-            Transaction transaction2 = new Transaction(2) { Sum = -132.32M, Currency = "UAH", Category = category1, Date = DateTime.Today };
-            Transaction transaction3 = new Transaction(3)
-            {
-                Sum = -43.76M,
-                Currency = "UAH",
-                Category = category1,
-                Date = new DateTime(DateTime.Today.Year, DateTime.Today.Month - 1, DateTime.Today.Day)
-            };
-
+            Transaction transaction1 = new Transaction(Guid.NewGuid(), -10.10M, "UAH", category1, "", DateTimeOffset.Now);
+            Transaction transaction2 = new Transaction(Guid.NewGuid(), -132.32M, "UAH", category1, "", DateTimeOffset.Now);
+            Transaction transaction3 = new Transaction(Guid.NewGuid(), -43.76M, "UAH", category1, "",
+                new DateTimeOffset(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month - 1, DateTimeOffset.Now.Day,
+                    DateTimeOffset.Now.Hour, DateTimeOffset.Now.Minute, DateTimeOffset.Now.Second,
+                    DateTimeOffset.Now.Offset));
+            
             wallet1.AddTransaction(transaction1);
             wallet1.AddTransaction(transaction2);
             wallet1.AddTransaction(transaction3);
@@ -163,8 +164,8 @@ namespace Budgets.BusinessLayerTests
             Wallet walletHealthCategory = new Wallet(Guid.NewGuid(), "With category (Health)", "desc", "USD", 0, Guid.NewGuid());
             walletHealthCategory.AddCategory(categoryHealth);
 
-            Transaction transactionEat = new Transaction(1) { Sum = -10.10M, Currency = "UAH", Category = categoryEat, Date = DateTime.Today};
-            Transaction transactionHealth = new Transaction(2) { Sum = -2.02M, Currency = "UAH", Category = categoryHealth, Date = DateTime.Today};
+            Transaction transactionEat = new Transaction(Guid.NewGuid(), -10.10M, "UAH", categoryEat, "", DateTimeOffset.Now);
+            Transaction transactionHealth = new Transaction(Guid.NewGuid(), -2.02M, "UAH", categoryHealth, "", DateTimeOffset.Now);
 
             // Act
             bool wncAddTe = walletNoCategories.AddTransaction(transactionEat);
@@ -189,8 +190,8 @@ namespace Budgets.BusinessLayerTests
 
             Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
-            Transaction transaction1 = new Transaction(1) { Sum = 10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
-            Transaction transaction2 = new Transaction(2) { Sum = 5.19M, Currency = "UAH", Category = category1, Date = DateTime.Today };
+            Transaction transaction1 = new Transaction(Guid.NewGuid(), 10.10M, "UAH", category1, "", DateTimeOffset.Now);
+            Transaction transaction2 = new Transaction(Guid.NewGuid(), 5.19M, "UAH", category1, "", DateTimeOffset.Now);
 
             wallet1.AddTransaction(transaction1);
 
@@ -211,7 +212,7 @@ namespace Budgets.BusinessLayerTests
 
             Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
-            Transaction transaction1 = new Transaction(1) { Sum = 10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
+            Transaction transaction1 = new Transaction(Guid.NewGuid(), 10.10M, "UAH", category1, "", DateTimeOffset.Now);
 
             wallet1.AddTransaction(transaction1);
 
@@ -232,7 +233,7 @@ namespace Budgets.BusinessLayerTests
 
             Wallet wallet1 = new Wallet(Guid.NewGuid(), "Wall_let", "desc", "UAH", 0, Guid.NewGuid());
 
-            Transaction transaction1 = new Transaction(1) { Sum = 10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
+            Transaction transaction1 = new Transaction(Guid.NewGuid(), 10.10M, "UAH", category1, "", DateTimeOffset.Now);
 
             wallet1.AddTransaction(transaction1);
 
@@ -256,7 +257,7 @@ namespace Budgets.BusinessLayerTests
             List<Transaction> transactions = new List<Transaction>();
             for (int i = 1; i <= 12; i++)
             {
-                Transaction transaction1 = new Transaction(i) { Sum = i * 10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
+                Transaction transaction1 = new Transaction(Guid.NewGuid(), i * 10.10M, "UAH", category1, "", DateTimeOffset.Now);
                 transactions.Add(transaction1);
                 wallet1.AddTransaction(transaction1);
             }
@@ -284,7 +285,7 @@ namespace Budgets.BusinessLayerTests
             List<Transaction> transactions = new List<Transaction>();
             for (int i = 1; i <= 12; i++)
             {
-                Transaction transaction1 = new Transaction(i) { Sum = i * 10.10M, Currency = "UAH", Category = category1, Date = DateTime.Today };
+                Transaction transaction1 = new Transaction(Guid.NewGuid(), i * 10.10M, "UAH", category1, "", DateTimeOffset.Now);
                 transactions.Add(transaction1);
                 wallet1.AddTransaction(transaction1);
             }

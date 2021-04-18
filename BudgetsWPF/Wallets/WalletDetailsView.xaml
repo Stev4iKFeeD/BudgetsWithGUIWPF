@@ -7,54 +7,86 @@
              mc:Ignorable="d"
              IsEnabled="{Binding IsEnabled}">
 
-    <Grid>
+    <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0">
-            <TextBlock Margin="10 10 10 0">Name</TextBlock>
-            <TextBox Margin="10" HorizontalAlignment="Stretch">
-                <TextBox.Text>
-                    <Binding Path="Name" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                        <Binding.ValidationRules>
-                            <DataErrorValidationRule></DataErrorValidationRule>
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>
-        </StackPanel>
-        <StackPanel Grid.Row="1">
-            <TextBlock Margin="10 10 10 0">Description</TextBlock>
-            <TextBox Margin="10" HorizontalAlignment="Stretch" 
-                     TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MaxLines="5"
-                     Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-        </StackPanel>
-        <StackPanel Grid.Row="2">
-            <TextBlock Margin="10 10 10 0">Currency</TextBlock>
-            <TextBox Margin="10" HorizontalAlignment="Stretch">
-                <TextBox.Text>
-                    <Binding Path="Currency" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                        <Binding.ValidationRules>
-                            <DataErrorValidationRule></DataErrorValidationRule>
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>
-        </StackPanel>
-        <StackPanel Grid.Row="3">
-            <TextBlock Margin="10 10 10 0">Initial Balance</TextBlock>
-            <TextBox Margin="10" HorizontalAlignment="Stretch" 
-                     Text="{Binding InitialBalance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-        </StackPanel>
-        <Button Grid.Row="4" Margin="10"
+        <!-- <Button Grid.RowSpan="3" Margin="10" Visibility="Hidden">*For Alignment*</Button> -->
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0">Current balance:</TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="1" TextAlignment="Right"
+                       Text="{Binding CurrentBalance}"></TextBlock>
+            <TextBlock Grid.Row="1" Grid.Column="0">Incomes (this month):</TextBlock>
+            <TextBlock Grid.Row="1" Grid.Column="1" TextAlignment="Right"
+                       Text="{Binding IncomesThisMonth}"></TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="0">Expenses (this month):</TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="1" TextAlignment="Right"
+                       Text="{Binding ExpensesThisMonth}"></TextBlock>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1" Grid.Column="0" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <StackPanel>
+                    <TextBlock Margin="10 10 10 0">Name</TextBlock>
+                    <TextBox Margin="10" HorizontalAlignment="Stretch">
+                        <TextBox.Text>
+                            <Binding Path="Name" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule></DataErrorValidationRule>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel Grid.Row="1">
+                    <TextBlock Margin="10 10 10 0">Description</TextBlock>
+                    <TextBox Margin="10" HorizontalAlignment="Stretch" 
+                             TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MaxLines="5"
+                             Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                </StackPanel>
+                <StackPanel Grid.Row="2">
+                    <TextBlock Margin="10 10 10 0">Currency</TextBlock>
+                    <TextBox Margin="10" HorizontalAlignment="Stretch">
+                        <TextBox.Text>
+                            <Binding Path="Currency" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule></DataErrorValidationRule>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel Grid.Row="3">
+                    <TextBlock Margin="10 10 10 0">Initial Balance</TextBlock>
+                    <TextBox Margin="10" HorizontalAlignment="Stretch" 
+                             Text="{Binding InitialBalance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+        <Button Grid.Row="2" Grid.Column="0" Margin="10"
                 Command="{Binding SaveWalletCommand}">Save</Button>
-        <ProgressBar Name="ProgressBar" Grid.Row="5" Grid.Column="0"
+        <ProgressBar Name="ProgressBar" Grid.Row="3" Grid.Column="0"
                       IsIndeterminate="{Binding IsIndeterminate}" Visibility="{Binding Visibility}" Foreground="#242670"/>
     </Grid>
 </UserControl>

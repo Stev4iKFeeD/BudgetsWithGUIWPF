@@ -7,8 +7,8 @@ namespace Budgets.BusinessLayer.Wallets
     {
         public Guid Guid { get; }
         public string Name { get; }
-        public string Description { get; set; }
-        public string Currency { get; set; }
+        public string Description { get; }
+        public string Currency { get; }
         public decimal InitialBalance { get; }
 
         public Guid OwnerGuid { get; }

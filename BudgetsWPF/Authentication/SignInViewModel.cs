@@ -128,20 +128,27 @@ namespace Budgets.GUI.WPF.Authentication
             try
             {
                 User user = await authService.Authenticate(_authUser);
-                CurrentUserInfo.Guid = user.Guid;
+                CurrentInfo.UserGuid = user.Guid;
 
                 MessageBox.Show($"Sign In is successful for user {user.FirstName} {user.LastName}", "Sign In");
-                await Task.Run(() => GoToWalletsCommand.Execute());
+                await Task.Run(() =>
+                {
+                    GoToWalletsCommand.Execute();
+                    Visibility = Visibility.Hidden;
+                    IsIndeterminate = false;
+                    IsEnabled = true;
+                });
             }
             catch (Exception e)
             {
                 MessageBox.Show("Sign In failed: " + e.Message, "Sign In");
-            }
-            finally
-            {
                 Visibility = Visibility.Hidden;
                 IsIndeterminate = false;
                 IsEnabled = true;
+            }
+            finally
+            {
+                
             }
         }
 

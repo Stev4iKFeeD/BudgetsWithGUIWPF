@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -31,6 +32,11 @@ namespace DataStorage
 
         public async Task AddOrUpdateAsync(TObject obj)
         {
+            if (!Directory.Exists(_baseFolder))
+            {
+                Directory.CreateDirectory(_baseFolder);
+            }
+
             string stringObject = JsonSerializer.Serialize(obj);
             string filePath = Path.Combine(_baseFolder, obj.Guid.ToString("N"));
 
@@ -62,7 +68,8 @@ namespace DataStorage
         {
             List<TObject> res = new List<TObject>();
 
-            foreach (var file in Directory.EnumerateFiles(_baseFolder))
+            var files = Directory.EnumerateFiles(_baseFolder).OrderBy(s => new FileInfo(s).CreationTime);
+            foreach (var file in files)
             {
                 string stringObject;
 
@@ -77,17 +84,57 @@ namespace DataStorage
             return res;
         }
 
+        // public async Task<List<TObject>> GetSomeAsync(int from, int to)
+        // {
+        //     List<TObject> res = new List<TObject>();
+        //
+        //     int current = from;
+        //     foreach (var file in Directory.EnumerateFiles(_baseFolder).OrderBy(s => new FileInfo(s).LastWriteTime))
+        //     {
+        //         if (current >= to)
+        //         {
+        //             break;
+        //         }
+        //
+        //         string stringObject;
+        //
+        //         using (StreamReader streamReader = new StreamReader(file))
+        //         {
+        //             stringObject = await streamReader.ReadToEndAsync();
+        //         }
+        //
+        //         res.Add(JsonSerializer.Deserialize<TObject>(stringObject));
+        //
+        //         ++current;
+        //     }
+        //
+        //     return res;
+        // }
+
         public async Task<bool> Delete(Guid guid)
         {
-            string filePath = Path.Combine(_baseFolder, guid.ToString("N"));
-
-            if (!File.Exists(filePath))
+            if (guid == Guid.Empty)
             {
-                return false;
-            }
+                string path = Path.Combine(_baseFolder);
+                if (!Directory.Exists(path))
+                {
+                    return false;
+                }
 
-            File.Delete(filePath);
-            return true;
+                Directory.Delete(path, true);
+                return true;
+            }
+            else
+            {
+                string path = Path.Combine(_baseFolder, guid.ToString("N"));
+                if (!File.Exists(path))
+                {
+                    return false;
+                }
+
+                File.Delete(path);
+                return true;
+            }
         }
     }
 }

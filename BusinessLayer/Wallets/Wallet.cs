@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Budgets.BusinessLayer.Transactions;
 
 namespace Budgets.BusinessLayer.Wallets
 {
@@ -48,7 +49,7 @@ namespace Budgets.BusinessLayer.Wallets
         //     return res;
         // }
 
-        private decimal IncomesOrExpenses(DateTime since, DateTime to, bool incomes)
+        private decimal IncomesOrExpenses(DateTimeOffset since, DateTimeOffset to, bool incomes)
         {
             decimal res = 0;
             foreach (var transaction in Transactions)
@@ -61,26 +62,26 @@ namespace Budgets.BusinessLayer.Wallets
             return incomes ? res : Math.Abs(res);
         }
 
-        public decimal Incomes(DateTime since, DateTime to)
+        public decimal Incomes(DateTimeOffset since, DateTimeOffset to)
         {
             return IncomesOrExpenses(since, to, true);
         }
 
         public decimal IncomesForCurrentMonth()
         {
-            DateTime today = DateTime.Today;
-            return Incomes(new DateTime(today.Year, today.Month, 1), today);
+            DateTimeOffset now = DateTimeOffset.Now;
+            return Incomes(new DateTime(now.Year, now.Month, 1), now);
         }
 
-        public decimal Expenses(DateTime since, DateTime to)
+        public decimal Expenses(DateTimeOffset since, DateTimeOffset to)
         {
             return IncomesOrExpenses(since, to, false);
         }
 
         public decimal ExpensesForCurrentMonth()
         {
-            DateTime today = DateTime.Today;
-            return Expenses(new DateTime(today.Year, today.Month, 1), today);
+            DateTimeOffset now = DateTimeOffset.Now;
+            return Expenses(new DateTime(now.Year, now.Month, 1), now);
         }
 
         public bool AddTransaction(Transaction transaction)

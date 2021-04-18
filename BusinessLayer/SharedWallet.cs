@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Budgets.BusinessLayer.Transactions;
 using Budgets.BusinessLayer.Wallets;
 
 namespace Budgets.BusinessLayer

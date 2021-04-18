@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Budgets.BusinessLayer.Wallets;
 using Budgets.GUI.WPF.Navigation;
+using Budgets.GUI.WPF.Transactions;
 using Budgets.Services;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -15,7 +16,8 @@ namespace Budgets.GUI.WPF.Wallets
     public class WalletsViewModel : BindableBase, INavigatable<MainNavigatableType>
     {
         private WalletsService _walletsService;
-        private WalletDetailsViewModel _currentWallet;
+        private WalletDetailsViewModel _currentWalletDetails;
+        private TransactionsListViewModel _currentTransactions;
 
         private bool _isEnabled;
         private bool _isIndeterminate;
@@ -23,14 +25,49 @@ namespace Budgets.GUI.WPF.Wallets
 
         public ObservableCollection<WalletDetailsViewModel> Wallets { get; set; }
 
-        public WalletDetailsViewModel CurrentWallet
+        public WalletDetailsViewModel CurrentWalletDetails
         {
-            get => _currentWallet;
+            get => _currentWalletDetails;
             set
             {
-                _currentWallet = value;
-                RaisePropertyChanged();
-                RemoveWalletCommand.RaiseCanExecuteChanged();
+                if (_currentWalletDetails != value)
+                {
+                    IsEnabled = false;
+                    IsIndeterminate = true;
+                    Visibility = Visibility.Visible;
+
+                    _currentWalletDetails = value;
+
+                    Task.Run(() =>
+                    {
+                        CurrentTransactions = _currentWalletDetails == null
+                            ? null
+                            : new TransactionsListViewModel(_currentWalletDetails);
+
+                        RaisePropertyChanged();
+                        RaisePropertyChanged(nameof(IsWalletSelected));
+                        RaisePropertyChanged(nameof(OnWalletSelection));
+
+                        Visibility = Visibility.Hidden;
+                        IsIndeterminate = false;
+                        IsEnabled = true;
+                    });
+
+                    RemoveWalletCommand.RaiseCanExecuteChanged();
+                }
+            }
+        }
+
+        public TransactionsListViewModel CurrentTransactions
+        {
+            get => _currentTransactions;
+            set
+            {
+                if (_currentTransactions != value)
+                {
+                    _currentTransactions = value;
+                    RaisePropertyChanged();
+                }
             }
         }
 
@@ -70,6 +107,23 @@ namespace Budgets.GUI.WPF.Wallets
             }
         }
 
+        public bool IsWalletSelected => CurrentWalletDetails != null;
+
+        public Visibility OnWalletSelection
+        {
+            get
+            {
+                if (IsWalletSelected)
+                {
+                    return Visibility.Visible;
+                }
+                else
+                {
+                    return Visibility.Hidden;
+                }
+            }
+        }
+
         public DelegateCommand AddWalletCommand { get; }
         public DelegateCommand RemoveWalletCommand { get; }
         public DelegateCommand SignOutCommand { get; }
@@ -81,7 +135,7 @@ namespace Budgets.GUI.WPF.Wallets
             _visibility = Visibility.Hidden;
 
             AddWalletCommand = new DelegateCommand(AddWallet);
-            RemoveWalletCommand = new DelegateCommand(RemoveWallet, () => CurrentWallet != null);
+            RemoveWalletCommand = new DelegateCommand(RemoveWallet, () => CurrentWalletDetails != null);
             SignOutCommand = new DelegateCommand(() => SignOut(signOut));
 
             ClearSensitiveData();
@@ -93,10 +147,7 @@ namespace Budgets.GUI.WPF.Wallets
             IsIndeterminate = true;
             Visibility = Visibility.Visible;
 
-            Wallet newWallet = new Wallet(Guid.NewGuid(), "Wallet", "", "UAH", 00.00m, CurrentUserInfo.Guid);
-            WalletDetailsViewModel newWalletDetailsViewModel = new WalletDetailsViewModel(newWallet, _walletsService);
-            Wallets.Add(newWalletDetailsViewModel);
-            CurrentWallet = newWalletDetailsViewModel;
+            Wallet newWallet = new Wallet(Guid.NewGuid(), "Wallet", "", "UAH", 00.00m, CurrentInfo.UserGuid);
 
             await _walletsService.AddOrUpdateWallet(new SaveWallet()
             {
@@ -108,15 +159,18 @@ namespace Budgets.GUI.WPF.Wallets
                 OwnerGuid = newWallet.OwnerGuid
             });
 
-            Visibility = Visibility.Hidden;
-            IsIndeterminate = false;
-            IsEnabled = true;
+            WalletDetailsViewModel newWalletDetailsViewModel = new WalletDetailsViewModel(newWallet, _walletsService);
+            Wallets.Add(newWalletDetailsViewModel);
+            CurrentWalletDetails = newWalletDetailsViewModel;
+
+            // Visibility = Visibility.Hidden;
+            // IsIndeterminate = false;
+            // IsEnabled = true;
         }
 
         private async void RemoveWallet()
         {
             IsEnabled = false;
-            
 
             MessageBoxResult boxResult =
                 MessageBox.Show("Are you sure?", "Remove", MessageBoxButton.YesNo);
@@ -125,19 +179,31 @@ namespace Budgets.GUI.WPF.Wallets
                 IsIndeterminate = true;
                 Visibility = Visibility.Visible;
 
-                if (await _walletsService.RemoveWallet(CurrentWallet.Guid))
+                if (await _walletsService.RemoveWallet(CurrentWalletDetails.Guid))
                 {
-                    int index = Wallets.IndexOf(CurrentWallet);
+                    CurrentTransactions.RemoveAllTransactionsCommand.Execute();
+                    int index = Wallets.IndexOf(CurrentWalletDetails);
                     Wallets.RemoveAt(index);
-                    CurrentWallet = index == Wallets.Count
-                        ? index == 0 ? null : Wallets.ElementAt(index - 1)
-                        : Wallets.ElementAt(index);
+                    // CurrentWalletDetails = index == Wallets.Count
+                    //     ? index == 0 
+                    //         ? null 
+                    //         : Wallets.ElementAt(index - 1)
+                    //     : Wallets.ElementAt(index);
+                    CurrentWalletDetails = null;
+
+                    // CurrentTransactions = CurrentWalletDetails == null
+                    //     ? null
+                    //     : new TransactionsListViewModel(_currentWalletDetails.Guid);
                 }
             }
-            
-            Visibility = Visibility.Hidden;
-            IsIndeterminate = false;
-            IsEnabled = true;
+            else
+            {
+                IsEnabled = true;
+            }
+
+            // Visibility = Visibility.Hidden;
+            // IsIndeterminate = false;
+            // IsEnabled = true;
         }
 
         private void SignOut(Action signOut)
@@ -147,7 +213,7 @@ namespace Budgets.GUI.WPF.Wallets
             WalletDetailsViewModel unsavedWallet = Wallets.FirstOrDefault(wallet => wallet.HasChanged);
             if (unsavedWallet != null)
             {
-                CurrentWallet = unsavedWallet;
+                CurrentWalletDetails = unsavedWallet;
                 MessageBoxResult boxResult =
                     MessageBox.Show( "Some changes was not saved. Continue?", "Sign Out", MessageBoxButton.YesNo);
                 if (boxResult == MessageBoxResult.Yes)
@@ -173,7 +239,8 @@ namespace Budgets.GUI.WPF.Wallets
         {
             _walletsService = new WalletsService();
             Wallets = new ObservableCollection<WalletDetailsViewModel>();
-            CurrentWallet = null;
+            CurrentWalletDetails = null;
+            // CurrentTransactions = null;
             List<Wallet> loadedWallets = Task.Run(_walletsService.GetWallets).Result;
             foreach (var wallet in loadedWallets)
             {

@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="Budgets.GUI.WPF.Transactions.TransactionsListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Budgets.GUI.WPF.Wallets"
+             xmlns:transactions="clr-namespace:Budgets.GUI.WPF.Transactions"
+             mc:Ignorable="d"
+             IsEnabled="{Binding IsEnabled}">
+
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type transactions:TransactionDetailsViewModel}">
+            <transactions:TransactionDetailsView></transactions:TransactionDetailsView>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="75"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition MinWidth="75"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <ListView Grid.ColumnSpan="3" SelectionMode="Single" ItemsSource="{Binding Transactions}" 
+                  DisplayMemberPath="TransactionDisplayName" SelectedItem="{Binding CurrentTransaction}"></ListView>
+        <TextBox Grid.Row="1" Grid.Column="0" Margin="10 10 5 10" HorizontalAlignment="Stretch" Visibility="{Binding RangeVisible}">
+            <TextBox.Text>
+                <Binding Path="From" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <DataErrorValidationRule></DataErrorValidationRule>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <TextBlock Grid.Row="1" Grid.Column="1" Margin="0 10 0 10" Visibility="{Binding RangeVisible}">-</TextBlock>
+        <TextBox Grid.Row="1" Grid.Column="2" Margin="5 10 10 10" HorizontalAlignment="Stretch" Visibility="{Binding RangeVisible}">
+            <TextBox.Text>
+                <Binding Path="To" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <DataErrorValidationRule></DataErrorValidationRule>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="10 0 10 10" Visibility="{Binding RangeVisible}"
+                Command="{Binding ApplyRangeCommand}">Apply</Button>
+
+        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="10"
+                Command="{Binding AddTransactionCommand}">Add</Button>
+
+        <ProgressBar Name="ProgressBar" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"
+                     IsIndeterminate="{Binding IsIndeterminate}" Visibility="{Binding Visibility}" Foreground="#242670"/>
+
+        <!-- <ContentControl Grid.Row="0" Grid.Column="0" Grid.RowSpan="5" Grid.ColumnSpan="3"  -->
+        <!--                 Content="{Binding CurrentTransaction}"></ContentControl> -->
+        <ContentControl Grid.Row="0" Grid.Column="0" Grid.RowSpan="4" Grid.ColumnSpan="3" 
+                        Content="{Binding CurrentTransaction}"></ContentControl>
+    </Grid>
+</UserControl>

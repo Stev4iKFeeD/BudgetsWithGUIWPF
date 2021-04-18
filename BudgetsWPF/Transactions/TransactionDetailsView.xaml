@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="Budgets.GUI.WPF.Transactions.TransactionDetailsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Budgets.GUI.WPF.Transactions"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d"
+             IsEnabled="{Binding IsEnabled}">
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <!-- <RowDefinition Height="Auto"></RowDefinition> -->
+        </Grid.RowDefinitions>
+        
+        <Button Margin="10" Width="130" HorizontalAlignment="Left"
+                Command="{Binding BackToListCommand}">Back</Button>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <StackPanel>
+                    <TextBlock Margin="10 10 10 0">Sum</TextBlock>
+                    <TextBox Margin="10" HorizontalAlignment="Stretch" 
+                             Text="{Binding Sum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                </StackPanel>
+                <StackPanel Grid.Row="1">
+                    <TextBlock Margin="10 10 10 0">Currency</TextBlock>
+                    <TextBox Margin="10" HorizontalAlignment="Stretch">
+                        <TextBox.Text>
+                            <Binding Path="Currency" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule></DataErrorValidationRule>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel Grid.Row="2">
+                    <TextBlock Margin="10 10 10 0">Description</TextBlock>
+                    <TextBox Margin="10" HorizontalAlignment="Stretch" 
+                             TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MaxLines="5"
+                             Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                </StackPanel>
+                <StackPanel Grid.Row="3">
+                    <TextBlock Margin="10 10 10 0">Date</TextBlock>
+                    <xctk:DateTimePicker Margin="10" HorizontalAlignment="Stretch" Text="{Binding DateString}"
+                                         ShowButtonSpinner="False" 
+                                         Format="Custom" FormatString="dd.MM.yyyy HH:mm:ss" 
+                                         TimeFormat="Custom" TimeFormatString="HH:mm:ss"></xctk:DateTimePicker>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+        
+        <Button Grid.Row="2" Margin="10"
+                Command="{Binding SaveTransactionCommand}">Save</Button>
+        <Button Grid.Row="3" Margin="10"
+                Command="{Binding RemoveTransactionCommand}">Remove</Button>
+        <!-- <ProgressBar Name="ProgressBar" Grid.Row="4" Grid.Column="0" -->
+        <!--               IsIndeterminate="{Binding IsIndeterminate}" Visibility="{Binding Visibility}" Foreground="#242670"/> -->
+
+    </Grid>
+</UserControl>

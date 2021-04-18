@@ -1,4 +1,6 @@
+using System;
 using Budgets.BusinessLayer;
+using Budgets.BusinessLayer.Transactions;
 using Xunit;
 
 namespace Budgets.BusinessLayerTests
@@ -9,7 +11,7 @@ namespace Budgets.BusinessLayerTests
         public void ValidateValid()
         {
             // Arrange
-            Transaction transaction1 = new Transaction(1) { Sum = 10.10M, Currency = "UAH", Category = new Category(1) };
+            Transaction transaction1 = new Transaction(Guid.NewGuid(), 10.10M, "UAH", new Category(1), "", DateTimeOffset.Now);
 
             // Act
             bool actual = transaction1.Validate();
@@ -22,7 +24,7 @@ namespace Budgets.BusinessLayerTests
         public void ValidateOnlyCurrency()
         {
             // Arrange
-            Transaction transaction1 = new Transaction(1) { Currency = "UAH" };
+            Transaction transaction1 = new Transaction(Guid.NewGuid(), 10.10M, "UAH", null, "", DateTimeOffset.Now);
 
             // Act
             bool actual = transaction1.Validate();

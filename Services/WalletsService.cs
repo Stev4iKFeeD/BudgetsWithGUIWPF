@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Budgets.BusinessLayer.Wallets;
 using DataStorage;
@@ -8,13 +9,13 @@ namespace Budgets.Services
 {
     public class WalletsService
     {
-        private FileDataStorage<DBWallet> _storage = new FileDataStorage<DBWallet>(CurrentUserInfo.Guid.ToString("N"));
+        private FileDataStorage<DBWallet> _storage = new FileDataStorage<DBWallet>(CurrentInfo.UserGuid.ToString("N"));
         
         public async Task<List<Wallet>> GetWallets()
         {
             return await Task.Run(async () =>
             {
-                // Thread.Sleep(1000);
+                Thread.Sleep(1000);
 
                 List<DBWallet> dbWallets = await _storage.GetAllAsync();
                 List<Wallet> res = new List<Wallet>();
@@ -40,7 +41,7 @@ namespace Budgets.Services
         {
             await Task.Run(async () =>
             {
-                // Thread.Sleep(1000);
+                Thread.Sleep(1000);
 
                 await _storage.AddOrUpdateAsync(new DBWallet
                 (
@@ -58,7 +59,7 @@ namespace Budgets.Services
         {
             return await Task.Run(async () =>
             {
-                // Thread.Sleep(1000);
+                Thread.Sleep(1000);
 
                 return await _storage.Delete(walletGuid);
             });
