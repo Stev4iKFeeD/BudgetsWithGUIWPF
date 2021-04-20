@@ -1,11 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
-using System.Threading.Tasks;
 using System.Windows;
 using Budgets.BusinessLayer;
 using Budgets.BusinessLayer.Transactions;
-using Budgets.Services;
 using Prism.Commands;
 using Prism.Mvvm;
 

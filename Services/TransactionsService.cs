@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Budgets.BusinessLayer.Transactions;
 using DataStorage;
@@ -21,7 +20,7 @@ namespace Budgets.Services
         {
             return await Task.Run(async () =>
             {
-                Thread.Sleep(1000);
+                // Thread.Sleep(1000);
 
                 List<DBTransaction> dbTransactions = (await _storage.GetAllAsync()).OrderBy(transaction => transaction.Date).ToList();
                 List<Transaction> res = new List<Transaction>();
@@ -47,7 +46,7 @@ namespace Budgets.Services
         {
             await Task.Run(async () =>
             {
-                Thread.Sleep(1000);
+                // Thread.Sleep(1000);
 
                 await _storage.AddOrUpdateAsync(new DBTransaction
                 (
@@ -65,7 +64,7 @@ namespace Budgets.Services
         {
             return await Task.Run(async () =>
             {
-                Thread.Sleep(1000);
+                // Thread.Sleep(1000);
 
                 return await _storage.Delete(transactionGuid);
             });
